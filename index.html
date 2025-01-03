@@ -42,24 +42,21 @@
         radius = '4';
     }
 
-    const svg = `
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-            }
-            html, body {
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-            }
-        </style>
-        <svg xmlns="http://www.w3.org/2000/svg" width="${totalWidth}" height="${totalHeight}">
-            <rect x="${border_color ? border_width / 2 : 0}" y="${border_color ? border_width / 2 : 0}" width="${border_color ? width - 5 : totalWidth - 5}" height="${border_color ? height : totalHeight}" fill="#${bg}" rx="${radius}" ry="${radius}" ${border_color ? `stroke="#${border_color}" stroke-width="${border_width}"` : ''} />
-            <text x="${(border_color ? border_width : 0) + logoSize + padding}" y="${totalHeight/2}" dominant-baseline="middle" font-family="${font}" font-size="${fontSize}" fill="#${color}" >${label}</text>
-            ${logo ? `<image x="${(border_color ? border_width : 0) + padding / 2}" y="${((totalHeight - logoSize) / 2) - 1}" width="${logoSize}" height="${logoSize}" href="${logo}" />` : ''}
-        </svg>
-    `;
-    
-    document.documentElement.innerHTML = svg;
+    const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${totalWidth}" height="${totalHeight}">
+    <rect x="${border_color ? border_width / 2 : 0}" y="${border_color ? border_width / 2 : 0}" 
+          width="${border_color ? width - 5 : totalWidth - 5}" height="${border_color ? height : totalHeight}" 
+          fill="#${bg}" rx="${radius}" ry="${radius}" 
+          ${border_color ? `stroke="#${border_color}" stroke-width="${border_width}"` : ''} />
+    <text x="${(border_color ? border_width : 0) + logoSize + padding}" y="${totalHeight/2}" 
+          dominant-baseline="middle" font-family="${font}" font-size="${fontSize}" 
+          fill="#${color}">${label}</text>
+    ${logo ? `<image x="${(border_color ? border_width : 0) + padding / 2}" 
+             y="${((totalHeight - logoSize) / 2) - 1}" width="${logoSize}" 
+             height="${logoSize}" href="${logo}" />` : ''}
+</svg>`;
+
+    const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    window.location.href = url;
 </script>
