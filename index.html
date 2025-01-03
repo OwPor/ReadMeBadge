@@ -1,63 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic SVG Badge</title>
-</head>
-<body>
-    <script>
-        function getParameterByName(name) {
-            const url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
+<svg xmlns="http://www.w3.org/2000/svg" id="svgElement"></svg>
+<script>
+    function getParameterByName(name) {
+        const url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
 
-        const label = getParameterByName('label') || 'Label';
-        const color = getParameterByName('color') || 'FFFFFF';
-        const bg = getParameterByName('bg') || '000000';
-        const logo = getParameterByName('logo') || '';
-        const border_color = getParameterByName('border') || 'F0F0F0';
-        const border_style = getParameterByName('border_style') || 'rounded';
-        const border_width = 2;
-        const font = getParameterByName('family') || 'Verdana,Geneva,DejaVu Sans,sans-serif';
-        
-        const height = 20;
-        const padding = 10;
-        const logoSize = logo ? 15 : 0;
-        const fontSize = 11;
+    const label = getParameterByName('label') || 'Label';
+    const color = getParameterByName('color') || 'FFFFFF';
+    const bg = getParameterByName('bg') || '000000';
+    const logo = getParameterByName('logo') || '';
+    const border_color = getParameterByName('border') || 'F0F0F0';
+    const border_style = getParameterByName('border_style') || 'rounded';
+    const border_width = 2;
+    const font = getParameterByName('family') || 'Verdana,Geneva,DejaVu Sans,sans-serif';
+    
+    const height = 20;
+    const padding = 10;
+    const logoSize = logo ? 15 : 0;
+    const fontSize = 11;
 
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        context.font = `${fontSize}px ${font}`;
-        const textWidth = context.measureText(label).width;
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = `${fontSize}px ${font}`;
+    const textWidth = context.measureText(label).width;
 
-        const width = Math.ceil(textWidth + (padding * 2) + logoSize);
+    const width = Math.ceil(textWidth + (padding * 2) + logoSize);
 
-        const totalWidth = width + (border_color ? border_width * 2 : 0);
-        const totalHeight = height + (border_color ? border_width * 2 : 0);
+    const totalWidth = width + (border_color ? border_width * 2 : 0);
+    const totalHeight = height + (border_color ? border_width * 2 : 0);
 
-        let radius = '0';
-        
-        if (border_style === 'circle') {
-            radius = `${height / 2}`;
-        } else if (border_style === 'rounded') {
-            radius = '4';
-        }
+    let radius = '0';
+    
+    if (border_style === 'circle') {
+        radius = `${height / 2}`;
+    } else if (border_style === 'rounded') {
+        radius = '4';
+    }
 
-        const svg = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="${totalWidth}" height="${totalHeight}">
-                <rect x="${border_color ? border_width / 2 : 0}" y="${border_color ? border_width / 2 : 0}" width="${border_color ? width - 5 : totalWidth - 5}" height="${border_color ? height : totalHeight}" fill="#${bg}" rx="${radius}" ry="${radius}" ${border_color ? `stroke="#${border_color}" stroke-width="${border_width}"` : ''} />
-                <text x="${(border_color ? border_width : 0) + logoSize + padding}" y="${totalHeight/2}" dominant-baseline="middle" font-family="${font}" font-size="${fontSize}" fill="#${color}" >${label}</text>
-                ${logo ? `<image x="${(border_color ? border_width : 0) + padding / 2}" y="${((totalHeight - logoSize) / 2) - 1}" width="${logoSize}" height="${logoSize}" href="${logo}" />` : ''}
-            </svg>
-        `;
-        
-        document.write(svg);
-    </script>
-</body>
-</html>
+    const svg = `
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            html, body {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+        </style>
+        <svg xmlns="http://www.w3.org/2000/svg" width="${totalWidth}" height="${totalHeight}">
+            <rect x="${border_color ? border_width / 2 : 0}" y="${border_color ? border_width / 2 : 0}" width="${border_color ? width - 5 : totalWidth - 5}" height="${border_color ? height : totalHeight}" fill="#${bg}" rx="${radius}" ry="${radius}" ${border_color ? `stroke="#${border_color}" stroke-width="${border_width}"` : ''} />
+            <text x="${(border_color ? border_width : 0) + logoSize + padding}" y="${totalHeight/2}" dominant-baseline="middle" font-family="${font}" font-size="${fontSize}" fill="#${color}" >${label}</text>
+            ${logo ? `<image x="${(border_color ? border_width : 0) + padding / 2}" y="${((totalHeight - logoSize) / 2) - 1}" width="${logoSize}" height="${logoSize}" href="${logo}" />` : ''}
+        </svg>
+    `;
+    
+    document.documentElement.innerHTML = svg;
+</script>
